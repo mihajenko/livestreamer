@@ -71,10 +71,16 @@ def create_output():
                          "installed. You must specify the path to a player "
                          "executable with --player.")
 
-        if args.player_fifo:
-            pipename = "livestreamerpipe-{0}".format(os.getpid())
+        if args.player_fifo:           
+            # name the pipe
+            if args.stream_url:
+                url = stream_to_url(stream)
+            if url and "\\" not in url:
+                pipename = "{0}".format(url)
+            else:
+                pipename = "livestreamerpipe-{0}".format(os.getpid())
             console.logger.info("Creating pipe {0}", pipename)
-
+            # create the pipe
             try:
                 namedpipe = NamedPipe(pipename)
             except IOError as err:
